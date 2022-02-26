@@ -1,313 +1,217 @@
-package linkedlist;
+package linkedlistAssign;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class LinkedListUse {
-	//Method returning head
-	public static Node<Integer> createLinkedList(){
-		Node<Integer> n1 = new Node<>(10);
-		Node<Integer> n2 = new Node<>(20);
-		Node<Integer> n3 = new Node<>(30);
-		Node<Integer> n4 = new Node<>(40);
-		
-		n1.next = n2;
-		n2.next = n3;
-		n3.next = n4;
-		
-		return n1;
+	
+	//1st Assignment problem
+	public static int FindNode(Node<Integer> head, int n) {
+		return helper(head, n, 0);
 	}
 	
-	//We are updating head, first head refer to n1, next we update it to temp.next, head refer to n2
-	public static void print(Node<Integer> head) {
-		Node<Integer> temp = head;
-		while(temp != null) {
-			System.out.print(temp.data + " ");
-			temp = temp.next;
-			}
-		System.out.println();
-	}
-	
-	//Printing recursively
-	public static void printR(Node<Integer> head) {
+	public static int helper(Node<Integer> head, int n, int pos) {
 		if(head == null) {
-			return ;
+			return -1;
 		}
-		System.out.print(head.data + " ");
-		printR(head.next);
+		
+		if(head.data == n) {
+			return pos;
+		}
+		
+		int ans = helper(head.next, n, pos + 1);
+		return ans;
 	}
 	
-	//Reverse Linked List
-	public static Node<Integer> ReverseLL(Node<Integer> head){
+	//2nd Assignment Problem
+	public static Node<Integer> evenAfterOdd(Node<Integer> head){
+		//we need to place all odd first in a given manner and all even second
+		//we create two LL, we take oddH, oddT, evenH, evenT initialise with null
+		//we loop the LL,if we found odd, we check whether oddH is Null or not, if yes we create node, we assign oddT to oddH;
+		//else, we link odd.next with temp, we increment temp..
+		//we loop the LL,if we found even, we check whether evenH is Null or not, if yes we create node, we assign evenT to evenH;
+		//else, we link even.next with temp, we increment temp.
+		//we link both Linked List according conditions
 		if(head == null || head.next == null) {
 			return head;
 		}
-		Node<Integer> smallHead = ReverseLL(head.next);
-		Node<Integer> tail = head.next;
-		tail.next = head;
-		head.next = null;
-		return smallHead;
-//		while(tail.next != null) {
-//			tail = tail.next;
-//		}
-//		tail.next = head;
-//		head.next = null;
-//		return smallHead;
-	}
-	
-	public static void increment(Node<Integer> head) {
-		Node<Integer> temp = head;
+		Node<Integer> oddH = null, oddT = null, evenH = null, evenT = null, temp = head;
 		while(temp != null) {
-			temp.data++;
-			temp = temp.next;
-		}
-	}
-	
-	//we take count from -1 as we are taking index starts from 0
-	public static void printIthNode(Node<Integer> head, int i) {
-		Node<Integer> temp = head;
-		int count = -1;
-		while(temp!=null) {
-			count++;
-			if(count == i) {
-				System.out.println(temp.data);
+			if(temp.data%2 != 0) { //if we found odd num we create a node of oddH and we refer oddT to oddH
+				if(oddH == null) {
+					oddH = new Node<Integer>(temp.data);
+					oddT = oddH;
+				}else {
+					oddT.next = temp;
+					oddT = oddT.next;
+				}
+			}else {
+				if(evenH == null) {
+					evenH = new Node<Integer>(temp.data);
+					evenT = evenH;
+				}else {
+					evenT.next = temp;
+					evenT = evenT.next;
+				}
 			}
 			temp = temp.next;
 		}
-	}
-	
-	public static int length(Node<Integer> head) {
-		Node<Integer> temp = head;
-		int count = 0;
-		while(temp != null) {
-			count++;
-			temp = temp.next;
+		
+		if(oddH == null) {
+			return evenH;
+		}else if(evenT == null) {
+			head = oddH;
+		}else if(oddH != null && evenH != null) {
+			oddT.next = evenH;
+			head = oddH;
+			evenT.next = null;
 		}
-		return count;
+		return head;
 	}
 	
-	//we take input unless we enter -1;
-	//we take head reference and assign null
-	public static Node<Integer> takeInput(){
+	//3rd Assignment Problem
+	public static Node<Integer> skipMdeleteN(Node<Integer> head, int M, int N){
+		if(head == null) {
+			return head;
+		}
+		if(M==0) {
+            return null;
+		}
+        if(N==0) {
+            return head;
+        }
+        Node<Integer> curNode = head, t1;
+        int count;
+        while(curNode != null) {
+        	count = 1;
+        	while(count < M && curNode!=null) {
+        		curNode = curNode.next;
+        		count++;
+        	}
+        	if(curNode == null) {
+        		return head;
+        	}
+        	t1 = curNode.next;
+        	count = 1;
+        	while(count <= N && t1 != null) {
+        		t1 = t1.next;
+        		count++;
+        	}
+        	curNode.next = t1;
+        	curNode = t1;
+        }
+        return head;
+	}
+	
+	//4th Assignment Problem
+	public static Node<Integer> swapNodes(Node<Integer> head, int i, int j){
+		if(head == null || head.next == null){
+            return head;
+        }
+        
+        // if(i == 0 || j == 0){
+        //     return head;
+        // }
+        Node<Integer> prev1 = null, prev2 = null, cur1 = null, cur2 = null, temp = null, next1 = null,next2 = null;
+        prev1 = head;
+        int m = 0, n = 0;
+        if(i == 0){
+            prev1 = null;
+            cur1 = head;
+            
+        }else{
+        	while(m < i-1 && prev1 != null){
+            	prev1 = prev1.next;
+            	m++;
+        	}
+        	cur1 = prev1.next;
+        }
+        next1 = cur1.next;
+        
+        prev2 = head;
+        if(j == 0){
+            
+            prev2 = null;
+            cur2 = head;
+            
+        }else{
+            
+            while(n < j-1 && prev2 != null){
+                prev2 = prev2.next;
+                n++;
+        	}
+        	cur2 = prev2.next;
+            
+        }
+        next2 = cur2.next;
+        
+        if(i == 0){
+            prev2.next = cur1;
+            cur1.next = next2;
+            cur2.next=next1;
+            head = cur2;
+            return head;
+        }
+        
+        if(j == 0){
+            
+            prev1.next = cur2;
+             cur1.next = next2;
+            cur2.next= next1;
+            head = cur1;
+            return head;
+            
+        }
+        if(i < j){
+        	prev1.next = cur2;
+        	prev2.next = cur1;
+        	temp = cur2.next;
+        	cur2.next = cur1.next;
+        	cur1.next = temp;
+        }else{
+            prev2.next = cur1;
+        	prev1.next = cur2;
+        	temp = cur1.next;
+        	cur1.next = next2;
+        	cur2.next = next1;
+        }
+        return head;
+	}
+	
+	public static Node<Integer> takeInput() {
 		Scanner s = new Scanner(System.in);
 		int data = s.nextInt();
 		Node<Integer> head = null, tail = null;
 		while(data != -1) {
-			Node<Integer> currentNode = new Node<Integer>(data);
+			Node<Integer> currentNode = new Node<>(data); 
 			if(head == null) {
 				head = currentNode;
 				tail = currentNode;
 			}else {
-				tail.next = currentNode; //we are adding current Node, to tail.next
- 				tail = tail.next;        //we are updating tail...
-//				Node<Integer> tail = head;
-//				while(tail.next!=null) {
-//					tail = tail.next;
-//				}
-//				//Now tail is refer to last node
-//				//Connect current node after last node
-//				tail.next = currentNode;
+				tail.next = currentNode;
+				tail = tail.next;
 			}
 			data = s.nextInt();
 		}
 		return head;
 	}
 	
-	public static Node<Integer> Insert(Node<Integer> head, int elem, int pos) {
-		Node<Integer> nodeToBeInserted = new Node<Integer>(elem);
-		//We are returning the head;
-		//while we are adding ele before the head...
-		if(pos == 0) {
-			nodeToBeInserted.next = head;
-			return nodeToBeInserted;
-		}else {
-			int count = 0;
-			Node<Integer> prev = head;
-			//while loop stops when count equals to pos-1,
-		    // we are taking prev!=null, becoz we are avoiding to add ele at invalid index.
-			while(count < pos-1 && prev!=null) {
-				count++;
-				prev = prev.next;
-			}
-			//if prev is not equal to null we add, 
-			if(prev != null) {
-				nodeToBeInserted.next = prev.next;
-				prev.next = nodeToBeInserted;
-			}
-		}
-		return head;
-	}
-	
-	//Insert Ele recursively
-	public static Node<Integer> InsertR(Node<Integer> head, int ele, int pos){
-		if(head == null && pos > 0) {
-			return null;
-		}
-		
-		if(pos == 0) {
-			Node<Integer> nodeToBeInserted = new Node<>(ele);
-			nodeToBeInserted.next = head; 
-			return nodeToBeInserted;
-		}else {
-			Node<Integer> smallhead = InsertR(head.next, ele, pos-1);
-			head.next = smallhead; //This statement is very Imp
-			return head;
-		}
-	}
-	
-	public static Node<Integer> Delete(Node<Integer> head, int pos){
-		//if our head is null return null
-		if(head == null) {
-			return null;
-		}
-		
-		Node<Integer> prev = head;
-		//we need to check our next ele should not be null
-		//if we are deleting head node...
-		if(pos == 0 && prev.next != null) {
-			head = prev.next;
-			return head;
-		}else {
-			int count = 0;
-			while(count < pos-1 && prev.next != null) {
-				count++;
-				prev = prev.next;
-			}
-			if(prev.next!=null) {
-				prev.next = prev.next.next;
-			}
-			//if our next ele is null return head;
-			if(prev.next == null) {
-				return head;
-			}
-		}
-		return head;
-	}
-	
-	public static Node<Integer> DeleteR(Node<Integer> head, int pos){
-		if(head == null) {
-			return null;
-		}
-		if(pos == 0) {
-			return head.next;
-		}else {
-			Node<Integer> smallHead = DeleteR(head.next, pos-1);
-			head.next = smallHead;
-			return head;
-		}
-	}
-	//1st Assignment question
-	public static int findNode(Node<Integer> head, int n) {
+	public static void print(Node<Integer> head) {
 		Node<Integer> temp = head;
-		int count = -1;
-		while(temp!=null) {
-			count++;
-			if(temp.data == n) {
-				return count;
-			}
-			temp = temp.next;
-		}
-		return -1;
-	}
-	
-	//2nd Assignment question
-	public static Node<Integer> appendLastNtoFirst(Node<Integer> head, int n){
-		 if(n == 0) {
-			 return head;                //we calcuate total length, we take new count as total length - n;
-		 }								 //we traverse through new count, newcount.next is newHead, tail become newcount
-		 								 //and we make tail.next none, we traverse from newHead, at last we link our old head...
-		 Node<Integer> temp = head;
-		 int count = 0;
-		 while(temp!=null) {
-			 count++;
-			 temp = temp.next;
-		 }
-		 //to handle invalid n, if we have 3 ele in LL but n is given 4, it is invalid we return head...
-		 if(count < n){
-			 return head;
-	     }
-		 
-		 int newCount = count - n;
-		 count = 0;
-		 Node<Integer> temp1 = head;
-		 while(count < newCount - 1) {
-			 temp1 = temp1.next;
-			 count++;
-		 }
-		 Node<Integer> newHead = temp1.next;
-		 Node<Integer> tail    = temp1;
-		 Node<Integer> temp3 = newHead;
-		 while(temp3.next != null) {
-			 temp3 = temp3.next;
-		 }
-		 temp3.next = head;
-		 tail.next = null;
-		 
-		 return newHead;
-	}
-	
-	//3rd Assignment question
-	public static Node<Integer> removeDuplicates(Node<Integer> head){
-		if(head == null) {
-			return null;
-		}
-		Node<Integer> t1 = head;
-		while(t1.next != null) {
-			if(t1.next.data.equals(t1.data)) {
-				t1.next = t1.next.next;
-			}else {
-				t1 = t1.next;
-			}
-		}
-		return head;
-	}
-	
-	//4th Assignment question
-	public static void printReverse(Node<Integer> head) {
-		//Your code goes here
-       if(head==null)
-            return;
-        printReverse(head.next);
-        System.out.print(head.data+" ");
-	}
-	
-	//5th Assignment question
-	public static boolean isPalindrome(Node<Integer> head) {
-		Node<Integer> temp = head;
-		ArrayList<Integer> arr = new ArrayList<Integer>();
 		while(temp != null) {
-			arr.add(temp.data);
+			System.out.print(temp.data + " ");
 			temp = temp.next;
 		}
-		int start = 0, end = arr.size() - 1;
-		while(start < end) {
-			if(arr.get(start) != arr.get(end)) {
-				return false;
-			}else {
-				start++;
-				end--;
-			}
-		}
-		return true;
 	}
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Node<Integer> head = takeInput();//createLinkedList();
-		head = ReverseLL(head);
-//		head = Delete(head, 2);
-//		head = Insert(head, 20, 2);
-		printR(head);
-//		System.out.println(isPalindrome(head));
-//		head = removeDuplicates(head);
-//		print(head);
-//		head = appendLastNtoFirst(head, 3);
-//		print(head);
-		//System.out.println(findNode(head, 3));
-		//print(head);
-		//head = Insert(head, 0, 0);
-		//print(head);
-		//head = Delete(head, 5);
+		Node<Integer> head = takeInput();
+		head = swapNodes(head, 0, 6);
+		print(head);
+//		head = skipMdeleteN(head, 2, 2);
+//		Node<Integer> oddH = evenAfterOdd(head);
+//		print(oddH);
+		//System.out.println(FindNode(head, 3));
 		//print(head);
 	}
 
